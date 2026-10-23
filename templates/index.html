@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#171b1a">
+    <meta name="description" content="ParkSmart parking availability prediction system">
+
+    <title>ParkSmart | Smart Parking</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <header class="navbar">
+        <a href="/" class="brand">
+            <div class="brand-icon">P</div>
+            <span>Park<span class="brand-accent">Smart</span></span>
+        </a>
+
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            PARKING CONTROL CENTER
+        </div>
+    </header>
+
+    <main class="page-container">
+
+        <!-- Hero section -->
+        <section class="hero">
+            <div class="hero-copy">
+                
+                <h1>
+                    Your parking.<br>
+                    <span>Under control.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Plan ahead with parking occupancy predictions.
+                    Choose a location and arrival time to estimate
+                    how many spaces may be available.
+                </p>
+
+                <div class="hero-features">
+                    <div><span>✓</span> Occupancy prediction</div>
+                    <div><span>✓</span> Multiple locations</div>
+                    <div><span>✓</span> Quick results</div>
+                </div>
+
+                <div class="hero-note">
+                    <div class="parking-sign">P</div>
+                    <div>
+                        <strong>Find your space.</strong>
+                        <p>Make your next stop a smarter one.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CSS parking garage illustration -->
+            <div class="garage-visual" aria-hidden="true">
+                <div class="garage-sign">
+                    <span class="sign-p">P</span>
+                    <div>
+                        <strong>PARKING ZONE</strong>
+                        <small>SPACE STATUS SYSTEM</small>
+                    </div>
+                    <span class="sign-light"></span>
+                </div>
+
+                <div class="garage-floor">
+                    <div class="garage-wall"></div>
+
+                    <div class="parking-bay bay-one">
+                        <span>01</span>
+                    </div>
+                    <div class="parking-bay bay-two">
+                        <span>02</span>
+                    </div>
+                    <div class="parking-bay bay-three">
+                        <span>03</span>
+                    </div>
+                    <div class="parking-bay bay-four">
+                        <span>04</span>
+                    </div>
+
+                    <div class="garage-car">
+                        <div class="car-window"></div>
+                        <div class="car-windshield"></div>
+                        <div class="car-light left"></div>
+                        <div class="car-light right"></div>
+                        <div class="car-wheel left"></div>
+                        <div class="car-wheel right"></div>
+                    </div>
+
+                    <div class="lane-arrow">↓</div>
+                    <div class="floor-label">LEVEL 01 · ENTRY / EXIT</div>
+                </div>
+
+                <div class="garage-caption">
+                    <span></span> PREDICTION READY
+                    <div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main form and results -->
+        <section class="main-grid">
+
+            <!-- Prediction form -->
+            <div class="panel form-panel">
+                <div class="panel-heading">
+                    <div>
+                        <span class="section-kicker">01 / YOUR JOURNEY</span>
+                        <h2>Plan your parking</h2>
+                        <p>Enter your trip details below.</p>
+                    </div>
+                    <div class="heading-icon">↗</div>
+                </div>
+
+                <form id="predictionForm">
+
+                    <div class="field-group">
+                        <label for="parking_id">
+                            <span class="field-number">01</span>
+                            Parking location
+                        </label>
+
+                        <div class="input-wrap">
+                            <span class="input-symbol">⌖</span>
+                            <select id="parking_id" name="parking_id" required>
+                                <option value="">Choose a parking location</option>
+                                {% for parking in parking_areas %}
+                                <option value="{{ parking.id }}">
+                                    {{ parking.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <span class="select-arrow">⌄</span>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label>
+                            <span class="field-number">02</span>
+                            Select your vehicle
+                        </label>
+
+                        <div class="vehicle-grid">
+                            <label class="vehicle-option">
+                                <input type="radio" name="vehicle_type"
+                                       value="Car" required>
+                                <span class="vehicle-card">
+                                    <span class="vehicle-emoji">🚗</span>
+                                    <span>Car</span>
+                                </span>
+                            </label>
+
+                            <label class="vehicle-option">
+                                <input type="radio" name="vehicle_type"
+                                       value="Bike">
+                                <span class="vehicle-card">
+                                    <span class="vehicle-emoji">🏍️</span>
+                                    <span>Bike</span>
+                                </span>
+                            </label>
+
+                            <label class="vehicle-option">
+                                <input type="radio" name="vehicle_type"
+                                       value="Bus">
+                                <span class="vehicle-card">
+                                    <span class="vehicle-emoji">🚌</span>
+                                    <span>Bus</span>
+                                </span>
+                            </label>
+
+                            <label class="vehicle-option">
+                                <input type="radio" name="vehicle_type"
+                                       value="Truck">
+                                <span class="vehicle-card">
+                                    <span class="vehicle-emoji">🚚</span>
+                                    <span>Truck</span>
+                                </span>
+                            </label>
+
+                            <label class="vehicle-option">
+                                <input type="radio" name="vehicle_type"
+                                       value="Other">
+                                <span class="vehicle-card">
+                                    <span class="vehicle-emoji">🚙</span>
+                                    <span>Other</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="date_time">
+                            <span class="field-number">03</span>
+                            Arrival date and time
+                        </label>
+
+                        <div class="input-wrap">
+                            <span class="input-symbol">◷</span>
+                            <input type="datetime-local"
+                                   id="date_time"
+                                   name="date_time"
+                                   required>
+                        </div>
+
+                        <p class="field-help">
+                            Choose when you expect to arrive.
+                        </p>
+                    </div>
+
+                    <button type="submit" id="predictButton"
+                            class="predict-button">
+                        <span class="button-text">Predict availability</span>
+                        <span class="button-arrow">→</span>
+                    </button>
+
+                    <p id="statusMessage" class="status"
+                       role="status" aria-live="polite"></p>
+                </form>
+
+                <div class="form-footnote">
+                    <span>ⓘ</span>
+                    Predictions are estimates, not live sensor readings.
+                </div>
+            </div>
+
+            <!-- Prediction results -->
+            <div class="panel result-panel">
+                <div class="panel-heading result-heading">
+                    <div>
+                        <span class="section-kicker">02 / PARKING REPORT</span>
+                        <h2>Space overview</h2>
+                    </div>
+
+                    <div class="model-status">
+                        <span></span> MODEL RESULT
+                    </div>
+                </div>
+
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-illustration">
+                        <div class="empty-p">P</div>
+                        <div class="mini-bays">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    <h3>Awaiting your trip details</h3>
+                    <p>
+                        Select a parking location, vehicle, and arrival
+                        time. Your prediction will appear here.
+                    </p>
+
+                    <div class="empty-tags">
+                        <span>Occupancy</span>
+                        <span>Free spaces</span>
+                        <span>Availability</span>
+                    </div>
+                </div>
+
+                <div id="resultCard"
+                     class="result-content hidden"
+                     aria-live="polite">
+
+                    <div class="location-summary">
+                        <div class="location-pin">⌖</div>
+                        <div>
+                            <span class="small-label">SELECTED LOCATION</span>
+                            <h3 id="parkingResult">--</h3>
+                            <p id="timeResult">--</p>
+                        </div>
+                    </div>
+
+                    <div class="availability-banner">
+                        <div>
+                            <span class="small-label">AVAILABILITY LEVEL</span>
+                            <h3 id="availabilityResult">--</h3>
+                        </div>
+                        <div class="availability-icon" id="availabilityIcon">
+                            ✓
+                        </div>
+                    </div>
+
+                    <div class="occupancy-heading">
+                        <h3>Space utilisation</h3>
+                        <span id="percentageResult">--% free</span>
+                    </div>
+
+                    <div class="occupancy-track"
+                         role="img"
+                         aria-label="Predicted parking occupancy">
+                        <div id="occupancyBar" class="occupancy-bar"></div>
+                    </div>
+
+                    <div class="occupancy-stats">
+                        <div class="stat-box">
+                            <span class="stat-dot total-dot"></span>
+                            <span class="stat-label">Total spaces</span>
+                            <strong id="capacityResult">--</strong>
+                        </div>
+
+                        <div class="stat-box">
+                            <span class="stat-dot occupied-dot"></span>
+                            <span class="stat-label">Occupied</span>
+                            <strong id="occupiedResult">--</strong>
+                        </div>
+
+                        <div class="stat-box">
+                            <span class="stat-dot available-dot"></span>
+                            <span class="stat-label">Available</span>
+                            <strong id="availableResult">--</strong>
+                        </div>
+                    </div>
+
+                    <div class="vehicle-summary">
+                        <span class="vehicle-summary-icon"
+                              id="resultVehicleIcon">🚗</span>
+                        <div>
+                            <span class="small-label">YOUR VEHICLE</span>
+                            <strong id="vehicleResult">--</strong>
+                        </div>
+                    </div>
+
+                    <p class="result-note">
+                        <span>ⓘ</span>
+                        Estimates use the trained model and dataset,
+                        not live parking sensors.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it works -->
+        <section class="how-section">
+            <div class="how-heading">
+                <span class="section-kicker">THE PARKSMART PROCESS</span>
+                <h2>Three steps to a smarter stop</h2>
+            </div>
+
+            <div class="steps-grid">
+                <article class="step-card">
+                    <div class="step-top">
+                        <span class="step-number">01</span>
+                        <span class="step-icon">⌖</span>
+                    </div>
+                    <h3>Choose a location</h3>
+                    <p>Select your preferred parking area from the list.</p>
+                </article>
+
+                <article class="step-card">
+                    <div class="step-top">
+                        <span class="step-number">02</span>
+                        <span class="step-icon">◷</span>
+                    </div>
+                    <h3>Set your arrival</h3>
+                    <p>Choose a vehicle type and expected arrival time.</p>
+                </article>
+
+                <article class="step-card">
+                    <div class="step-top">
+                        <span class="step-number">03</span>
+                        <span class="step-icon">↗</span>
+                    </div>
+                    <h3>Check the forecast</h3>
+                    <p>View predicted occupancy and estimated free spaces.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <a href="/" class="footer-brand">Park<span>Smart</span></a>
+        <p>Smarter parking starts before you arrive.</p>
+        <span class="footer-mark">P / 01</span>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
